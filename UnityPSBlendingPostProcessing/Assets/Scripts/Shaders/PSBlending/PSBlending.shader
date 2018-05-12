@@ -18,7 +18,7 @@
 			CGPROGRAM
 			#pragma vertex BlendVert
 			#pragma fragment frag
-			#pragma multi_compile BLENDMODE_NORMAL BLENDMODE_DISSOLVE BLENDMODE_DARKEN BLENDMODE_MULTIPLY BLENDMODE_COLORBURN BLENDMODE_LINEARBURN BLENDMODE_DARKERCOLOR BLENDMODE_LIGHTEN BLENDMODE_SCREEN BLENDMODE_COLORDODGE BLENDMODE_LINEARDODGE BLENDMODE_LIGHTERCOLOR BLENDMODE_OVRELAY BLENDMODE_SOFTLIGHT BLENDMODE_HARDLIGHT BLENDMODE_VIVIDLIGHT BLENDMODE_LINEARLIGHT BLENDMODE_PINLIGHT BLENDMODE_HARDMIX BLENDMODE_DIFFERENCE BLENDMODE_EXCLUSION BLENDMODE_SUBTRACT BLENDMODE_DIVIDE BLENDMODE_HUE BLENDMODE_SATURATION BLENDMODE_COLOR BLENDMODE_LUMINOSITY 
+			#pragma shader_feature BLENDMODE_NONE BLENDMODE_NORMAL BLENDMODE_DISSOLVE BLENDMODE_DARKEN BLENDMODE_MULTIPLY BLENDMODE_COLORBURN BLENDMODE_LINEARBURN BLENDMODE_DARKERCOLOR BLENDMODE_LIGHTEN BLENDMODE_SCREEN BLENDMODE_COLORDODGE BLENDMODE_LINEARDODGE BLENDMODE_LIGHTERCOLOR BLENDMODE_OVRELAY BLENDMODE_SOFTLIGHT BLENDMODE_HARDLIGHT BLENDMODE_VIVIDLIGHT BLENDMODE_LINEARLIGHT BLENDMODE_PINLIGHT BLENDMODE_HARDMIX BLENDMODE_DIFFERENCE BLENDMODE_EXCLUSION BLENDMODE_SUBTRACT BLENDMODE_DIVIDE BLENDMODE_HUE BLENDMODE_SATURATION BLENDMODE_COLOR BLENDMODE_LUMINOSITY 
 			#include "UnityCG.cginc"
 			#include "PSBlend.cginc"
 
@@ -28,9 +28,9 @@
 				fixed4 col = tex2D(_MainTex,i.uv);
 				fixed4 blend = tex2D(_BlendTex, i.uv);
 				
+				#if !BLENDMODE_NONE
 				#if BLENDMODE_NORMAL
 					col = blendNormal(col, blend, _Intensity);
-					col = fixed4(1, 1, 1, 1);
 				#endif
 				//dissolve is not supported
 				#if BLENDMODE_DARKEN
@@ -49,7 +49,6 @@
 					col = blendDarkerColor(col, blend, _Intensity);
 				#endif
 				#if BLENDMODE_LIGHTEN
-
 					col = blendLighten(col, blend, _Intensity);
 				#endif
 				#if BLENDMODE_COLORDODGE
@@ -59,15 +58,12 @@
 					col = blendLinearDodge(col, blend, _Intensity);
 				#endif
 				#if BLENDMODE_LIGHTERCOLOR
-
 					col = blendLighterColor(col, blend, _Intensity);
 				#endif
 				#if BLENDMODE_OVRELAY
-
 					col = blendOverlay(col, blend, _Intensity);
 				#endif
 				#if BLENDMODE_SOFTLIGHT
-
 					col = blendSoftLight(col, blend, _Intensity);
 				#endif
 				#if BLENDMODE_HARDLIGHT
@@ -83,8 +79,6 @@
 					col = blendPinLight(col, blend, _Intensity);
 				#endif
 				#if BLENDMODE_HARDMIX
-					return fixed4(0, 1, 0, 1);
-
 					col = blendHardMix(col, blend, _Intensity);
 				#endif
 				#if BLENDMODE_DIFFERENCE
@@ -110,6 +104,7 @@
 				#endif
 				#if BLENDMODE_LUMINOSITY
 					col = blendLuminosity(col, blend, _Intensity);
+				#endif
 				#endif
 				
 				return col;

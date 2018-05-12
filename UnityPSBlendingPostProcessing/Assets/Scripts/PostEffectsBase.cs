@@ -5,11 +5,6 @@ using System.Collections;
 [RequireComponent(typeof(Camera))]
 public abstract class PostEffectsBase : MonoBehaviour
 {
-    [Header("Quality Settings")]
-    public bool UpdatePropertiesPerFrame = false;
-    [Range(1, 8)]
-    public int DownSample = 2;
-
     // Called when start
     protected void CheckResources()
     {
@@ -42,23 +37,6 @@ public abstract class PostEffectsBase : MonoBehaviour
     protected virtual void Start()
     {
         CheckResources();
-        updateProperties();
-        updateKeywords();
-    }
-
-    protected virtual void Update()
-    {
-        if(UpdatePropertiesPerFrame)
-        {
-            updateProperties();
-            updateKeywords();
-        }
-    }
-
-    protected abstract void updateProperties();
-    protected virtual void updateKeywords()
-    {
-        //you can update material shaderKeywords here
     }
 
     // Called when need to create the material used by this effect
