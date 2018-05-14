@@ -28,7 +28,6 @@ namespace Dawn.PostProcessing
                 return blendMaterial;
             }
         }
-        private bool isFirstFrameCompleted = false;
 
         protected override void Start()
         {
