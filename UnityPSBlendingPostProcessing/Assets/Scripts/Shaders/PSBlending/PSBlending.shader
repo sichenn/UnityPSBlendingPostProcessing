@@ -4,8 +4,8 @@
 	{
 		[HideInInspector]
 		_MainTex("Texture", 2D) = "white" {}
-		_Color("Color", Color) = (1,1,1,1)
 		_BlendTex("Blend Texture", 2D) = "black"{}
+		_Intensity("Intensity", Float) = 1	
 	}
 	
 	SubShader
@@ -18,93 +18,67 @@
 			CGPROGRAM
 			#pragma vertex BlendVert
 			#pragma fragment frag
-			#pragma shader_feature BLENDMODE_NONE BLENDMODE_NORMAL BLENDMODE_DISSOLVE BLENDMODE_DARKEN BLENDMODE_MULTIPLY BLENDMODE_COLORBURN BLENDMODE_LINEARBURN BLENDMODE_DARKERCOLOR BLENDMODE_LIGHTEN BLENDMODE_SCREEN BLENDMODE_COLORDODGE BLENDMODE_LINEARDODGE BLENDMODE_LIGHTERCOLOR BLENDMODE_OVRELAY BLENDMODE_SOFTLIGHT BLENDMODE_HARDLIGHT BLENDMODE_VIVIDLIGHT BLENDMODE_LINEARLIGHT BLENDMODE_PINLIGHT BLENDMODE_HARDMIX BLENDMODE_DIFFERENCE BLENDMODE_EXCLUSION BLENDMODE_SUBTRACT BLENDMODE_DIVIDE BLENDMODE_HUE BLENDMODE_SATURATION BLENDMODE_COLOR BLENDMODE_LUMINOSITY 
+			#pragma multi_compile BLENDMODE_NONE BLENDMODE_NORMAL BLENDMODE_DISSOLVE BLENDMODE_DARKEN BLENDMODE_MULTIPLY BLENDMODE_COLORBURN BLENDMODE_LINEARBURN BLENDMODE_DARKERCOLOR BLENDMODE_LIGHTEN BLENDMODE_SCREEN BLENDMODE_COLORDODGE BLENDMODE_LINEARDODGE BLENDMODE_LIGHTERCOLOR BLENDMODE_OVRELAY BLENDMODE_SOFTLIGHT BLENDMODE_HARDLIGHT BLENDMODE_VIVIDLIGHT BLENDMODE_LINEARLIGHT BLENDMODE_PINLIGHT BLENDMODE_HARDMIX BLENDMODE_DIFFERENCE BLENDMODE_EXCLUSION BLENDMODE_SUBTRACT BLENDMODE_DIVIDE BLENDMODE_HUE BLENDMODE_SATURATION BLENDMODE_COLOR BLENDMODE_LUMINOSITY 
 			#include "UnityCG.cginc"
 			#include "PSBlend.cginc"
 
 			fixed4 frag(v2f i) : SV_Target
 			{
-				// sample the texture
 				fixed4 col = tex2D(_MainTex,i.uv);
 				fixed4 blend = tex2D(_BlendTex, i.uv);
 				
-				#if !BLENDMODE_NONE
+				//I know I know this is scary. If there's a better way of doing this plz lemme know
 				#if BLENDMODE_NORMAL
 					col = blendNormal(col, blend, _Intensity);
-				#endif
 				//dissolve is not supported
-				#if BLENDMODE_DARKEN
+				#elif BLENDMODE_DARKEN
 					col = blendDarken(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_MULTIPLY
+				#elif BLENDMODE_MULTIPLY
 					col = blendMultiply(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_COLORBURN
+				#elif BLENDMODE_COLORBURN
 					col = blendColorBurn(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_LINEARBURN
+				#elif BLENDMODE_LINEARBURN
 					col = blendLinearBurn(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_DARKERCOLOR
+				#elif BLENDMODE_DARKERCOLOR
 					col = blendDarkerColor(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_LIGHTEN
+				#elif BLENDMODE_LIGHTEN
 					col = blendLighten(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_COLORDODGE
+				#elif BLENDMODE_COLORDODGE
 					col = blendColorDodge(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_LINEARDODGE
+				#elif BLENDMODE_LINEARDODGE
 					col = blendLinearDodge(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_LIGHTERCOLOR
+				#elif BLENDMODE_LIGHTERCOLOR
 					col = blendLighterColor(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_OVRELAY
+				#elif BLENDMODE_OVRELAY
 					col = blendOverlay(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_SOFTLIGHT
+				#elif BLENDMODE_SOFTLIGHT
 					col = blendSoftLight(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_HARDLIGHT
+				#elif BLENDMODE_HARDLIGHT
 					col = blendHardLight(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_VIVIDLIGHT
+				#elif BLENDMODE_VIVIDLIGHT
 					col = blendVividLight(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_LINEARLIGHT
+				#elif BLENDMODE_LINEARLIGHT
 					col = blendLinearLight(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_PINLIGHT
+				#elif BLENDMODE_PINLIGHT
 					col = blendPinLight(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_HARDMIX
+				#elif BLENDMODE_HARDMIX
 					col = blendHardMix(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_DIFFERENCE
+				#elif BLENDMODE_DIFFERENCE
 					col = blendDifference(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_EXCLUSION
+				#elif BLENDMODE_EXCLUSION
 					col = blendExclusion(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_SUBTRACT
+				#elif BLENDMODE_SUBTRACT
 					col = blendSubtract(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_DIVIDE
+				#elif BLENDMODE_DIVIDE
 					col = blendDivide(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_HUE
+				#elif BLENDMODE_HUE
 					col = blendHue(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_SATURATION
+				#elif BLENDMODE_SATURATION
 					col = blendSaturation(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_COLOR
+				#elif BLENDMODE_COLOR
 					col = blendColor(col, blend, _Intensity);
-				#endif
-				#if BLENDMODE_LUMINOSITY
+				#elif BLENDMODE_LUMINOSITY
 					col = blendLuminosity(col, blend, _Intensity);
-				#endif
 				#endif
 				
 				return col;

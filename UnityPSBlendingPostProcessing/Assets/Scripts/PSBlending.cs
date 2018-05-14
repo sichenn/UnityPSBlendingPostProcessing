@@ -18,15 +18,17 @@ namespace Dawn.PostProcessing
         public float Intensity = 1;
         private RenderTexture rt;
         [SerializeField]
-        private Material camTexMaterial;
+        [HideInInspector]
+        private Material blendMaterial;
         public Material material
         {
             get
             {
-                camTexMaterial = CheckShaderAndCreateMaterial(Shader, camTexMaterial);
-                return camTexMaterial;
+                blendMaterial = CheckShaderAndCreateMaterial(Shader, blendMaterial);
+                return blendMaterial;
             }
         }
+        private bool isFirstFrameCompleted = false;
 
         protected override void Start()
         {
@@ -36,14 +38,14 @@ namespace Dawn.PostProcessing
 
         private void OnRenderImage(RenderTexture source, RenderTexture destination)
         {
-            if (camTexMaterial && Shader)
+            if (material)
             {
                 int renderTextureWidth = Screen.width / DownSample;
                 int renderTextureHeight = Screen.height / DownSample;
 
                 RenderTexture buffer0 = RenderTexture.GetTemporary(renderTextureWidth, renderTextureHeight);
                 buffer0.filterMode = FilterMode.Bilinear;
-                Graphics.Blit(source, buffer0, camTexMaterial, 0);
+                Graphics.Blit(source, buffer0, material, 0);
                 Graphics.Blit(buffer0, destination);
                 RenderTexture.ReleaseTemporary(buffer0);
             }
@@ -57,9 +59,9 @@ namespace Dawn.PostProcessing
         {
             if (material)
             {
-                material.shaderKeywords = new List<string> { "BLENDMODE_" + BlendMode.ToString().ToUpper() }.ToArray();
                 material.SetTexture("_BlendTex", Texture);
                 material.SetFloat("_Intensity", Intensity);
+                material.shaderKeywords = new string[] { "BLENDMODE_" + BlendMode.ToString().ToUpper() };
             }
         }
     }

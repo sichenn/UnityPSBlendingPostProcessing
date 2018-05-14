@@ -12,7 +12,8 @@ namespace Dawn.PostProcessing
 
         private void OnEnable()
         {
-            psBlending.UpdateProperties();
+            if (!Application.isPlaying)
+                psBlending.UpdateProperties();
         }
 
         public override void OnInspectorGUI()
